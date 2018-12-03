@@ -47,6 +47,10 @@ Host lanHosts[MAX_LAN_HOST_NUM];
 int lanHostsNum = 0;
 
 int main(int argc, char *argv[]) {
+    // 首先将本机也加入 LanHosts 中
+    strcpy(lanHosts[lanHostsNum].name, "localhost");
+    strcpy(lanHosts[lanHostsNum++].ip, "127.0.0.1");
+
     // 初始化参数
     int startPort = DEFAULT_START_PORT, endPort = DEFAULT_END_PORT, threadNum = DEFAULT_THREAD_NUM;
     int i;
