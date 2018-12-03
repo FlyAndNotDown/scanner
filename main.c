@@ -23,7 +23,7 @@
 // 函数定义
 void showLanHostAndIP();
 int tcpPortScan(char *, int);
-void scan(char *, int, int, int);
+int scan(char *, int, int, int);
 void *scanThreadFunc(void *args);
 
 // 定义结构体
@@ -117,7 +117,7 @@ void showLanHostAndIP() {
 }
 
 // 扫描函数
-void scan(char *ip, int startPort, int endPort, int threadNum) {
+int scan(char *ip, int startPort, int endPort, int threadNum) {
     // 线程结构体数组
     pthread_t *pthreads;
     // 线程参数结构体数组
