@@ -72,6 +72,11 @@ void showLanHostAndIP() {
 
     // 不断读取并且存入结构体
     while (fgets(buffer1, CHAR_BUFFER_SIZE, hostNameFile) && fgets(buffer2, CHAR_BUFFER_SIZE, hostIpFile)) {
+        // 如果最后一个字符是 \n，将其改成 \0
+        if (buffer1[strlen(buffer1) - 1] == '\n') buffer1[strlen(buffer1) - 1] = '\0';
+        if (buffer2[strlen(buffer2) - 1] == '\n') buffer2[strlen(buffer2) - 1] = '\0';
+
+        // 拷贝
         strcpy(lanHosts[lanHostsNum].name, buffer1);
         strcpy(lanHosts[lanHostsNum++].ip, buffer2);
     }
@@ -82,9 +87,9 @@ void showLanHostAndIP() {
 
     // 先输出局域网主机信息
     printf("All host info in LAN: \n");
-    printf("No\t\tName\t\tIP\n");
+    printf("No\tName\t\tIP\n");
     for (i = 0; i < lanHostsNum; i++) {
-        printf("%d\t\t%s\t\t%s\n", i + 1, lanHosts[i].name, lanHosts[i].ip);
+        printf("%d\t%s\t\t%s\n", i + 1, lanHosts[i].name, lanHosts[i].ip);
     };
 }
 
