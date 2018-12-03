@@ -16,12 +16,14 @@
 #define MAX_LAN_HOST_NUM 200
 #define BUFFER_SIZE 1024
 #define CHAR_BUFFER_SIZE 40
-#define THREAD_NUM 8
+#define DEFAULT_THREAD_NUM 8
+#define DEFAULT_START_PORT 1
+#define DEFAULT_END_PORT 1024
 
 // 函数定义
 void showLanHostAndIP();
 int tcpPortScan(char *, int);
-void scan(char *, int, int);
+void scan(char *, int, int, int);
 void *scanThreadFunc(void *args);
 
 // 定义结构体
@@ -44,6 +46,10 @@ Host lanHosts[MAX_LAN_HOST_NUM];
 int lanHostsNum = 0;
 
 int main(int argc, char *argv[]) {
+    int startPort = DEFAULT_START_PORT;
+    int endPort = DEFAULT_END_PORT;
+    int threadNum = DEFAULT_THREAD_NUM;
+
     // 参数判断
     if (argc < 2) {
         printf("Usage:\n");
@@ -57,7 +63,13 @@ int main(int argc, char *argv[]) {
         // 获取并显示局域网主机名和IP
         showLanHostAndIP();
     } else if (!strcmp(argv[1], "-ip")) {
-        // TODO
+        // 获取参数
+        if (argc > 2) startPort = atoi(argv[3]);
+        if (argc > 3) endPort = atoi(argv[4]);
+        if (argc > 4) threadNum = atoi(argv[5]);
+
+        // 开始扫描
+        scan(argv[2], startPort, endPort, threadNum);
     } else {
         printf("Unknown params.\n");
     }
@@ -105,13 +117,16 @@ void showLanHostAndIP() {
 }
 
 // 扫描函数
-void scan(char *ip, int startPort, int endPort) {
+void scan(char *ip, int startPort, int endPort, int threadNum) {
     // 线程结构体数组
     pthread_t *pthreads;
     // 线程参数结构体数组
     ScanThreadArgsPtr argsArray;
 
-    int i, pthreadNum = THREAD_NUM;
+    int i, pthreadNum = threadNum;
+
+    // 输出日志
+    printf("\nScanning %s......\n", ip);
 
     // 分配空间
     pthreads = (pthread_t *) malloc(sizeof(pthread_t) * pthreadNum);
@@ -143,6 +158,9 @@ void scan(char *ip, int startPort, int endPort) {
     // 释放空间
     free(pthreads);
     free(argsArray);
+
+    // 日志
+    printf("Scan down.\n");
 
     return 0;
 }
