@@ -47,9 +47,9 @@ Host lanHosts[MAX_LAN_HOST_NUM];
 int lanHostsNum = 0;
 
 int main(int argc, char *argv[]) {
-    int startPort = DEFAULT_START_PORT;
-    int endPort = DEFAULT_END_PORT;
-    int threadNum = DEFAULT_THREAD_NUM;
+    // 初始化参数
+    int startPort = DEFAULT_START_PORT, endPort = DEFAULT_END_PORT, threadNum = DEFAULT_THREAD_NUM;
+    int i;
 
     // 参数判断
     if (argc < 2) {
@@ -63,6 +63,16 @@ int main(int argc, char *argv[]) {
     if (!strcmp(argv[1], "-lan")) {
         // 获取并显示局域网主机名和IP
         showLanHostAndIP();
+
+        // 获取参数
+        if (argc > 1) startPort = atoi(argv[2]);
+        if (argc > 2) startPort = atoi(argv[3]);
+        if (argc > 3) startPort = atoi(argv[4]);
+
+        // 对每一个局域网主机，都进行一遍扫描
+        for (i = 0; i < lanHostsNum; i++) {
+            scan(lanHosts[i].ip, startPort, endPort, threadNum);
+        }
     } else if (!strcmp(argv[1], "-ip")) {
         // 获取参数
         if (argc > 2) startPort = atoi(argv[3]);
