@@ -71,11 +71,9 @@ void showLanHostAndIP() {
     hostIpFile = fopen(".\/.hip", "r");
 
     // 不断读取并且存入结构体
-    buffer1 = fgets(buffer1, CHAR_BUFFER_SIZE, hostNameFile);
-    buffer2 = fgets(buffer2, CHAR_BUFFER_SIZE, hostIpFile);
-    while (buffer1 && buffer2) {
-        strcpy(lanHosts[lanHostsNum], buffer1);
-        strcpy(lanHosts[lanHostsNum++], buffer2);
+    while (fgets(buffer1, CHAR_BUFFER_SIZE, hostNameFile) && fgets(buffer2, CHAR_BUFFER_SIZE, hostIpFile) {
+        strcpy(lanHosts[lanHostsNum].name, buffer1);
+        strcpy(lanHosts[lanHostsNum++].ip, buffer2);
     }
 
     // 关闭文件
