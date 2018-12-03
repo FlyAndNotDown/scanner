@@ -16,16 +16,27 @@
 #define MAX_LAN_HOST_NUM 200
 #define BUFFER_SIZE 1024
 #define CHAR_BUFFER_SIZE 40
+#define THREAD_NUM 8
 
 // 函数定义
 void showLanHostAndIP();
-int tcpPortScan(char *ip, int port);
+int tcpPortScan(char *, int);
+void scan(char *, int, int);
+void *scanThreadFunc(void *args);
 
-// 定义结构体用于存储主机名和IP
+// 定义结构体
+// 主机结构体
 typedef struct {
     char name[40];
     char ip[40];
 } Host;
+// 扫描线程参数结构体
+typedef struct {
+    int pthreadNum;
+    char *ip;
+    int port;
+    int end;
+} ScanThreadArgs, *ScanThreadArgsPtr;
 
 // 全局变量
 // 用于存储局域网主机名和IP的数组
@@ -91,6 +102,65 @@ void showLanHostAndIP() {
     for (i = 0; i < lanHostsNum; i++) {
         printf("%d\t%s\t\t%s\n", i + 1, lanHosts[i].name, lanHosts[i].ip);
     };
+}
+
+// 扫描函数
+void scan(char *ip, int startPort, int endPort) {
+    // 线程结构体数组
+    pthread_t *pthreads;
+    // 线程参数结构体数组
+    ScanThreadArgsPtr argsArray;
+
+    int i, pthreadNum = THREAD_NUM;
+
+    // 分配空间
+    pthreads = (pthread_t *) malloc(sizeof(pthread_t) * pthreadNum);
+    argsArray = (ScanThreadArgsPtr) malloc(sizeof(ScanThreadArgs));
+
+    // 建立线程
+    for (i = 0; i < pthreadNum; i++) {
+        // 设置参数
+        memset(&argsArray[i], 0, sizeof(argsArray[i]));
+        argsArray[i].pthreadNum = pthreadNum;
+        argsArray[i].port = startPort + i;
+        argsArray[i].ip = ip;
+        argsArray[i].end = endPort;
+
+        if (pthread_create(&pthreads[i], NULL, scanThreadFunc, (void *) &argsArray[i]) == -1) {
+            printf("Can;t create pthread! Please try again!\n");
+            return 0;
+        }
+    }
+
+    // 睡一会，让子线程先执行
+    sleep(1);
+
+    // 等待线程释放
+    for (i = 0; i < pthreadNum; i++) {
+        pthread_join(pthreads[i], NULL);
+    }
+
+    // 释放空间
+    free(pthreads);
+    free(argsArray);
+
+    return 0;
+}
+
+// 扫描线程函数
+void *scanThreadFunc(void *args) {
+    // 获取参数
+    ScanThreadArgsPtr temp;
+    temp = (ScanThreadArgsPtr) args;
+
+    // 一个线程扫描一部分端口
+    while (temp->port <= temp->end) {
+        // 如果扫描到了，则在日志中输出
+        if (tcpPortScan(temp->id, temp->port)) printf("Port %d tcp - Open\n", temp->port);
+        // TODO UDP
+
+        temp->port += temp->pthreadNum;
+    }
 }
 
 // tcp 端口扫描
