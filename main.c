@@ -29,5 +29,16 @@ void showLanHostAndIP() {
 
 // tcp 端口扫描
 int tcpPortScan(char *ip, int port) {
-    
+    // socket文件描述符，文件描述符状态，连接状态
+    int sockfd, len, fcntlStatus, connectStatus;
+    // socket地址结构体
+    struct sockaddr_in addr;
+    // 超时
+    struct timeval timeout;
+    // 读写用的文件句柄
+    fd_set fdr, fdw;
+
+    // 置空结构体
+    memset(&addr, 0, sizeof(addr));
+    memset(&timeout, 0, sizeof(timeout));
 }
