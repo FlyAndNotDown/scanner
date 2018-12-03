@@ -161,7 +161,7 @@ int scan(char *ip, int startPort, int endPort, int threadNum) {
     free(argsArray);
 
     // 日志
-    printf("Scan down.\n");
+    printf("Scan down.\n\n");
 
     return 0;
 }
