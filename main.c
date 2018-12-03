@@ -70,8 +70,8 @@ int main(int argc, char *argv[]) {
 
         // 获取参数
         if (argc > 1) startPort = atoi(argv[2]);
-        if (argc > 2) startPort = atoi(argv[3]);
-        if (argc > 3) startPort = atoi(argv[4]);
+        if (argc > 2) endPort = atoi(argv[3]);
+        if (argc > 3) threadNum = atoi(argv[4]);
 
         // 对每一个局域网主机，都进行一遍扫描
         for (i = 0; i < lanHostsNum; i++) {
