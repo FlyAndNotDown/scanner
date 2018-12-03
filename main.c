@@ -107,4 +107,57 @@ int tcpPortScan(char *ip, int port) {
     // 置空结构体
     memset(&addr, 0, sizeof(addr));
     memset(&timeout, 0, sizeof(timeout));
+
+    // 设置为IP通信
+    addr.sin_family = AF_INET;
+    // 设置地址结构体中的IP地址
+    addr.sin_addr.s_addr = inet_addr(ip);
+    // 设置地址结构体中的端口号
+    addr.sin_port = htons(port);
+
+    // 创建 socket 套接字
+    if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+        return 0;
+    }
+
+    // 设置套接字为非阻塞模式
+    fcntlStatus = fcntl(sockfd, F_GETFL, 0);
+    if (fcntlStatus < 0) {
+        close(sockfd);
+        return 0;
+    }
+    fcntlStatus |= O_NONBLOCK;
+    if (fcntl(sockfd, F_SETFL, fcntlStatus) < 0) {
+        close(sockfd);
+        return 0;
+    }
+
+    // 尝试连接
+    connectStatus = connect(sockfd, (struct sockaddr *) &addr, sizeof(addr));
+    if (connectStatus != 0) {
+        if (errno == EINPROGRESS) {
+            FD_ZERO(&fdr);
+            FD_ZERO(&fdw);
+            FD_SET(sockfd, &fdr);
+            FD_SET(sockfd, &fdw);
+            // 设置1s超时
+            timeout.tv_sec = 1;
+            timeout.tv_usec = 0;
+            connectStatus = select(sockfd + 1, &fdr, &fdw, NULL, &timeout);
+
+            // 如果连接超时或者调用失败
+            if (connectStatus <= 0 || connectStatus == 2) {
+                close(sockfd);
+                return 0;
+            }
+
+            // 如果连接成功
+            if (connectStatus == 1 && FD_ISSET(sockfd, &fdw)) {
+                close(sockfd);
+                return 1;
+            }
+            close(sockfd);
+            return 0;
+        }
+    }
 }
