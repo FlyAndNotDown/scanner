@@ -174,7 +174,7 @@ void *scanThreadFunc(void *args) {
     // 一个线程扫描一部分端口
     while (temp->port <= temp->end) {
         // 如果扫描到了，则在日志中输出
-        if (tcpPortScan(temp->id, temp->port)) printf("Port %d tcp - Open\n", temp->port);
+        if (tcpPortScan(temp->ip, temp->port)) printf("Port %d tcp - Open\n", temp->port);
         // TODO UDP
 
         temp->port += temp->pthreadNum;

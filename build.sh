@@ -1,1 +1,1 @@
-gcc main.c -o scanner
+gcc main.c -o scanner -pthread
