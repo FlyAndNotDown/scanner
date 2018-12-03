@@ -87,6 +87,7 @@ void showLanHostAndIP() {
     int i;
 
     // 执行shell指令获取局域网所有主机名和IP，并将结果输出到.host
+    printf("\n");
     system("sudo arp -a | cut -d \" \" -f 1 > .hname");
     system("sudo arp -a | cut -d \" \" -f 2 | sed \"s/\(//g\" | sed \"s/)//g\" > .hip");
 
@@ -115,6 +116,7 @@ void showLanHostAndIP() {
     for (i = 0; i < lanHostsNum; i++) {
         printf("%d\t%s\t\t%s\n", i + 1, lanHosts[i].name, lanHosts[i].ip);
     };
+    printf("\n");
 }
 
 // 扫描函数
