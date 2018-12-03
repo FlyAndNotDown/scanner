@@ -131,7 +131,7 @@ int scan(char *ip, int startPort, int endPort, int threadNum) {
 
     // 分配空间
     pthreads = (pthread_t *) malloc(sizeof(pthread_t) * pthreadNum);
-    argsArray = (ScanThreadArgsPtr) malloc(sizeof(ScanThreadArgs));
+    argsArray = (ScanThreadArgsPtr) malloc(sizeof(ScanThreadArgs) * pthreadNum);
 
     // 建立线程
     for (i = 0; i < pthreadNum; i++) {
