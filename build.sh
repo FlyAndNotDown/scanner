@@ -1,1 +1,1 @@
-gcc -o main.c scanner
+gcc main.c -o scanner
