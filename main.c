@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <sys/select.h>
+#include <pthread.h>
 
 // 宏定义
 #define MAX_LAN_HOST_NUM 200
