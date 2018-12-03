@@ -36,8 +36,8 @@ int main(int argc, char *argv[]) {
     // 参数判断
     if (argc < 2) {
         printf("Usage:\n");
-        printf("1. .\/scanner -lan\n");
-        printf("2. .\/scanner -ip ipAddress\n");
+        printf("1. ./scanner -lan\n");
+        printf("2. ./scanner -ip ipAddress\n");
         return 0;
     }
 
@@ -64,7 +64,7 @@ void showLanHostAndIP() {
 
     // 执行shell指令获取局域网所有主机名和IP，并将结果输出到.host
     system("arp -a | cut -d \" \" -f 1 > .hname");
-    system("arp -a | cut -d \" \" -f 2 | sed "s\/\(\/\/g" | sed "s\/\)\/\/g" > .hip");
+    system("arp -a | cut -d \" \" -f 2 | sed \"s/\(//g\" | sed \"s/\)//g\" > .hip");
 
     // 打开文件
     hostNameFile = fopen(".\/.hname", "r");
